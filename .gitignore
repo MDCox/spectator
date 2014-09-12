@@ -25,6 +25,6 @@ _testmain.go
 # Vim swp files
 *.swp
 
-# Built gonc and config files
-gonc
+# Built binaries and config files
+pdxIrcGraph
 conf.json
