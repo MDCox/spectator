@@ -11,6 +11,14 @@ import (
 // can input it's data into Neo4j, and that the http server has no problem
 // querying that data.
 func main() {
+	c := make(chan string)
+	var msg string
 	fmt.Println("Server starting...")
-	irc.Connect("irc.freenode.net:6665")
+	go irc.Connect("irc.freenode.net:6665", c)
+	for {
+		select {
+		case msg = <-c:
+			fmt.Println(msg)
+		}
+	}
 }
