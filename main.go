@@ -3,6 +3,7 @@
 package main
 
 import (
+	"./data"
 	"./irc"
 	"fmt"
 )
@@ -18,7 +19,7 @@ func main() {
 	for {
 		select {
 		case msg = <-c:
-			fmt.Println(msg)
+			data.Handle(msg)
 		}
 	}
 }
