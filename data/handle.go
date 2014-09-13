@@ -6,13 +6,13 @@ import (
 	"fmt"
 	"github.com/jmcvetta/neoism"
 	"github.com/sorcix/irc"
-	"log"
+	//"log"
 )
 
 func ConnectToNeo() *neoism.Database {
 	db, err := neoism.Connect("http://localhost:7474/db/data")
 	if err != nil {
-		log.Fatal("COULD NOT CONNECT TO NEO4J: ", err)
+		//	log.Fatal("COULD NOT CONNECT TO NEO4J: ", err)
 	}
 	return db
 }
@@ -23,13 +23,18 @@ func Handle(input string, db *neoism.Database) {
 		fmt.Println("Could not parse message")
 	}
 
-	format(msg)
+	store(msg)
 }
 
-func format(msg *irc.Message) {
-
-}
-
-func store() {
-
+func store(msg *irc.Message) {
+	switch msg.Command {
+	case "JOIN":
+		joined(msg)
+	case "PART":
+		parted(msg)
+	case "PRIVMSG":
+		pmsged(msg)
+	case "ACTION":
+		action(msg)
+	}
 }
