@@ -12,7 +12,7 @@ import (
 // identifies with the nick "spectator."  It connects to every room specified
 // in the rooms variable.
 func Connect(hostname string, c chan string) {
-	//rooms := []string{"#bottesting"}
+	rooms := []string{"#bottesting"}
 
 	fmt.Printf("connecting to %s\n", hostname)
 	conn, err := irc.Dial(hostname)
@@ -29,6 +29,10 @@ func Connect(hostname string, c chan string) {
 	}()
 
 	identify(conn)
+	fmt.Println("Identified")
+
+	joinRooms(conn, rooms)
+	fmt.Printf("Join: %s\n", rooms)
 }
 
 // identify() sends the USER and NICK commands to identify upon conenction.
@@ -48,5 +52,15 @@ func identify(conn *irc.Conn) {
 		if err != nil {
 			fmt.Printf("Err: %s \n%s\n", err, msg)
 		}
+	}
+}
+
+// joinRooms() joins any irc channel that is included in the `rooms` slice.
+func joinRooms(conn *irc.Conn, rooms []string) {
+	for _, room := range rooms {
+		conn.Encode(&irc.Message{
+			Command: irc.JOIN,
+			Params:  []string{room},
+		})
 	}
 }
