@@ -30,8 +30,6 @@ func store(msg *irc.Message) {
 	switch msg.Command {
 	case "JOIN":
 		joined(msg)
-	case "PART":
-		parted(msg)
 	case "PRIVMSG":
 		pmsged(msg)
 	case "ACTION":
