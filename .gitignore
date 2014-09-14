@@ -27,4 +27,5 @@ _testmain.go
 
 # Built binaries and config files
 pdxIrcGraph
+spectator
 conf.json
