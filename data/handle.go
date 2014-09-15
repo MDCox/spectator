@@ -7,6 +7,13 @@ import (
 	"github.com/sorcix/irc"
 )
 
+// Main datastore
+var DB db
+
+func init() {
+	DB.Nodes = make(map[string]*Node)
+}
+
 func Handle(input string) {
 	msg := irc.ParseMessage(input)
 	if msg == nil {
