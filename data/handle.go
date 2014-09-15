@@ -12,6 +12,7 @@ var DB db
 
 func init() {
 	DB.Nodes = make(map[string]*Node)
+	DB.Edges = make(map[string]*Edge)
 }
 
 func Handle(input string) {

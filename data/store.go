@@ -24,11 +24,12 @@ func joined(msg *irc.Message) {
 			NodeType: "user",
 		}
 		// Associate with channel
-		DB.Edges = append(DB.Edges, Edge{
+		edgeID := fmt.Sprint("%s-%s", msg.Prefix.Name, msg.Params[0])
+		DB.Edges[edgeID] = &Edge{
 			Source:   DB.Nodes[msg.Prefix.Name].ID,
 			Target:   DB.Nodes[msg.Params[0]].ID,
 			EdgeType: "IS_IN",
-		})
+		}
 	}
 }
 

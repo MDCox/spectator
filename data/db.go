@@ -5,7 +5,7 @@ package data
 // set to the node/edge ID.
 type db struct {
 	Nodes map[string]*Node
-	Edges []Edge
+	Edges map[string]*Edge
 }
 
 // Node representing an irc user or channel
