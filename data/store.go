@@ -3,6 +3,7 @@ package data
 import (
 	"fmt"
 	"github.com/sorcix/irc"
+	"strings"
 )
 
 // Create user node and "IS_IN" edge to room if non-existent.
@@ -41,5 +42,16 @@ func joined(msg *irc.Message) {
 // the reference.  If that edge already exists, increment
 // the "times" property by 1.
 func messaged(msg *irc.Message) {
-
+	message := msg.Trailing
+	for name, _ := range DB.Nodes {
+		if strings.Contains(message, msg.Prefix.Name) {
+			edgeID := fmt.Sprintf("%s-%s", msg.Prefix.Name, name)
+			DB.Edges[edgeID] = &Edge{
+				Source:   msg.Prefix.Name,
+				Target:   name,
+				EdgeType: "REFERENCED",
+			}
+			fmt.Printf("%s referenced %s", msg.Prefix.Name, name)
+		}
+	}
 }
