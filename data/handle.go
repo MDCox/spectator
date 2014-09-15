@@ -29,8 +29,8 @@ func store(msg *irc.Message) {
 	case "JOIN":
 		joined(msg)
 	case "PRIVMSG":
-		pmsged(msg)
+		messaged(msg)
 	case "ACTION":
-		action(msg)
+		messaged(msg)
 	}
 }
