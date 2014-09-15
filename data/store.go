@@ -23,8 +23,11 @@ func joined(msg *irc.Message) {
 			ID:       msg.Prefix.Name,
 			NodeType: "user",
 		}
-		// Associate with channel
-		edgeID := fmt.Sprint("%s-%s", msg.Prefix.Name, msg.Params[0])
+	}
+
+	// Associate user with channel
+	edgeID := fmt.Sprint("%s-%s", msg.Prefix.Name, msg.Params[0])
+	if DB.Edges[edgeID] == nil {
 		DB.Edges[edgeID] = &Edge{
 			Source:   DB.Nodes[msg.Prefix.Name].ID,
 			Target:   DB.Nodes[msg.Params[0]].ID,
