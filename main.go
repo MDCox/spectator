@@ -16,15 +16,12 @@ func main() {
 	c := make(chan string)
 	var msg string
 
-	// Connect to Neo4j server
-	db := data.ConnectToNeo()
-
 	fmt.Println("Server starting...")
 	go irc.Connect("irc.freenode.net:6665", c)
 	for {
 		select {
 		case msg = <-c:
-			data.Handle(msg, db)
+			data.Handle(msg)
 		}
 	}
 }
