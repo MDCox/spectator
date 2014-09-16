@@ -6,6 +6,9 @@ import (
 	"./data"
 	"./irc"
 	"fmt"
+	"os"
+	"os/signal"
+	"syscall"
 )
 
 // Handles all the different packages to make sure that the data-collecting bot
@@ -14,6 +17,19 @@ import (
 func main() {
 	// Channel to be used to pass information back from irc server
 	c := make(chan string)
+
+	// Dump JSON on ^C
+	sigChan := make(chan os.Signal, 1)
+	signal.Notify(sigChan, os.Interrupt, syscall.SIGTERM)
+	go func() {
+		sig := <-sigChan
+		if sig != nil {
+			data.Dump()
+			os.Exit(1)
+		}
+	}()
+
+	// Holds current irc message
 	var msg string
 
 	fmt.Println("Server starting...")

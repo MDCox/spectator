@@ -71,9 +71,6 @@ func inchan(msg *irc.Message) {
 			}
 		}
 		edgeID := fmt.Sprintf("%s-%s", u, msg.Params[2])
-		fmt.Println(edgeID)
-		fmt.Println(msg.Params[0])
-		fmt.Println(msg.Params[1])
 		if DB.Edges[edgeID] == nil {
 			DB.Edges[edgeID] = &Edge{
 				Source:   DB.Nodes[u].ID,

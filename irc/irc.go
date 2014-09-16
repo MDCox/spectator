@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/sorcix/irc"
 	"log"
+	"time"
 )
 
 // Connect() takes a string with url:port of the irc server, and a channel
@@ -12,7 +13,15 @@ import (
 // identifies with the nick "spectator."  It connects to every room specified
 // in the rooms variable.
 func Connect(hostname string, c chan string) {
-	rooms := []string{"#bottesting"}
+	rooms := []string{
+		"#pdxnode", "#pdxruby", "#pdxgo", "#pdxtech",
+		"#calagator", "#brainsilo", "#dorkbotpdx",
+		"#epdx", "#osgeo-pdx", "#pdx.pm", "#pdxdjango",
+		"#pdxfunc", "#pdxhackathon", "#pdxpug", "#pdxpython",
+		"#pdxscala", "pdxwebdev", "#pdx.st", "#pdxtech-btc",
+		"#techcoffee", "#codeforportland", "#nspdx",
+		"#pdxbots",
+	}
 
 	fmt.Printf("connecting to %s\n", hostname)
 	conn, err := irc.Dial(hostname)
@@ -65,6 +74,7 @@ func identify(conn *irc.Conn) {
 // joinRooms() joins any irc channel that is included in the `rooms` slice.
 func joinRooms(conn *irc.Conn, rooms []string) {
 	for _, room := range rooms {
+		time.Sleep(time.Second * 2)
 		conn.Encode(&irc.Message{
 			Command: irc.JOIN,
 			Params:  []string{room},

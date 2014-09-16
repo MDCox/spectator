@@ -3,6 +3,7 @@
 package data
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/sorcix/irc"
 )
@@ -21,7 +22,7 @@ func Handle(input string) {
 		fmt.Println("Could not parse message")
 	}
 	store(msg)
-	viewDB(input)
+	//viewDB(input)
 }
 
 func store(msg *irc.Message) {
@@ -52,4 +53,12 @@ func viewDB(msg string) {
 		fmt.Printf("        %s, %s\n", k, v)
 	}
 	fmt.Println("--------\n")
+}
+
+func Dump() {
+	graphJSON, err := json.Marshal(DB)
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Printf("%s", graphJSON)
 }
