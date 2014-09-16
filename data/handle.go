@@ -32,6 +32,9 @@ func store(msg *irc.Message) {
 		messaged(msg)
 	case "ACTION":
 		messaged(msg)
+	// List of nicks in Channel before start.
+	case "353":
+		inchan(msg)
 	}
 }
 

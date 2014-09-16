@@ -55,3 +55,31 @@ func messaged(msg *irc.Message) {
 		}
 	}
 }
+
+// Adds nodes for users who were already in the room before
+// spectator was started.  If they were added from another
+// room, they are not added.  An edge is drawn to show that
+// they are in the room.
+func inchan(msg *irc.Message) {
+	users := strings.Split(msg.Trailing, " ")
+	for _, u := range users {
+		if DB.Nodes[u] == nil {
+			fmt.Printf("New User: %s\n", u)
+			DB.Nodes[u] = &Node{
+				ID:       u,
+				NodeType: "user",
+			}
+		}
+		edgeID := fmt.Sprintf("%s-%s", u, msg.Params[2])
+		fmt.Println(edgeID)
+		fmt.Println(msg.Params[0])
+		fmt.Println(msg.Params[1])
+		if DB.Edges[edgeID] == nil {
+			DB.Edges[edgeID] = &Edge{
+				Source:   DB.Nodes[u].ID,
+				Target:   DB.Nodes[msg.Params[2]].ID,
+				EdgeType: "IS_IN",
+			}
+		}
+	}
+}
