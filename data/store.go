@@ -44,14 +44,14 @@ func joined(msg *irc.Message) {
 func messaged(msg *irc.Message) {
 	message := msg.Trailing
 	for name, _ := range DB.Nodes {
-		if strings.Contains(message, msg.Prefix.Name) {
+		if strings.Contains(message, name) {
 			edgeID := fmt.Sprintf("%s-%s", msg.Prefix.Name, name)
 			DB.Edges[edgeID] = &Edge{
 				Source:   msg.Prefix.Name,
 				Target:   name,
 				EdgeType: "REFERENCED",
 			}
-			fmt.Printf("%s referenced %s", msg.Prefix.Name, name)
+			fmt.Printf("\n%s referenced %s\n", msg.Prefix.Name, name)
 		}
 	}
 }
