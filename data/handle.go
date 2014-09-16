@@ -20,7 +20,6 @@ func Handle(input string) {
 	if msg == nil {
 		fmt.Println("Could not parse message")
 	}
-
 	store(msg)
 }
 

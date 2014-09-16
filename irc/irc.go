@@ -24,6 +24,13 @@ func Connect(hostname string, c chan string) {
 	go func() {
 		for {
 			msg, _ := conn.Decode()
+			if msg.Command == "PING" {
+				conn.Encode(&irc.Message{
+					Command:  "PONG",
+					Params:   msg.Params,
+					Trailing: msg.Trailing,
+				})
+			}
 			c <- msg.String()
 		}
 	}()
