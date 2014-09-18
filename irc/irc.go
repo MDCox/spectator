@@ -14,13 +14,13 @@ import (
 // in the rooms variable.
 func Connect(hostname string, c chan string) {
 	rooms := []string{
-		"#pdxnode", "#pdxruby", "#pdxgo", "#pdxtech",
+		"#pdxnode", "#pdxruby", "#pdxgo",
 		"#calagator", "#brainsilo", "#dorkbotpdx",
-		"#epdx", "#osgeo-pdx", "#pdx.pm", "#pdxdjango",
-		"#pdxfunc", "#pdxhackathon", "#pdxpug", "#pdxpython",
-		"#pdxscala", "pdxwebdev", "#pdx.st", "#pdxtech-btc",
-		"#techcoffee", "#codeforportland", "#nspdx",
-		"#pdxbots",
+		"#epdx", "#osgeo-pdx", "#pdxdjango",
+		"#pdxfunc", "#pdxhackathon", "#pdxpug",
+		"#pdxscala", "pdxwebdev", "#pdxtech-btc",
+		"#codeforportland", "#nspdx", "#pdxtech",
+		"#pdxbots", "#pdxpython",
 	}
 
 	fmt.Printf("connecting to %s\n", hostname)
