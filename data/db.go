@@ -4,8 +4,8 @@ package data
 // Nodes and Edges are stored in a map with their key
 // set to the node/edge ID.
 type db struct {
-	Nodes map[string]*Node
-	Edges map[string]*Edge
+	Nodes map[string]*Node `json:"nodes"`
+	Edges map[string]*Edge `json:"edges"`
 }
 
 // Node representing an irc user or channel
@@ -16,9 +16,9 @@ type db struct {
 // the number of either users in a room, or the number of
 // references made to that person.
 type Node struct {
-	ID       string
-	NodeType string
-	Count    int
+	ID       string `json:"id"`
+	NodeType string `json:"nodeType"`
+	Count    int    `json:"count"`
 }
 
 // Edge representing a relationship or action between nodes.
@@ -29,7 +29,7 @@ type Node struct {
 // user being a member of a room, or "REFERENCED" in the case
 // of a user referencing another user.
 type Edge struct {
-	Source   string
-	Target   string
-	EdgeType string
+	Source   string `json:"source"`
+	Target   string `json:"target"`
+	EdgeType string `json:"edgeType"`
 }
