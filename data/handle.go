@@ -46,13 +46,13 @@ func viewDB(msg string) {
 	fmt.Println("DB:")
 	fmt.Println("    Nodes:")
 	for k, v := range DB.Nodes {
-		fmt.Printf("        %s, %s\n", k, v)
+		fmt.Printf("        %s, %v\n", k, v)
 	}
 	fmt.Println("    Edges:")
 	for k, v := range DB.Edges {
-		fmt.Printf("        %s, %s\n", k, v)
+		fmt.Printf("        %s, %v\n", k, v)
 	}
-	fmt.Println("--------\n")
+	fmt.Println("--------")
 }
 
 func Dump() {
