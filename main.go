@@ -5,11 +5,15 @@ package main
 import (
 	"./data"
 	"./irc"
+	"bufio"
 	"fmt"
 	"os"
 	"os/signal"
 	"syscall"
+	"time"
 )
+
+var startTime time.Time = time.Now()
 
 // Handles all the different packages to make sure that the data-collecting bot
 // can pass its output to the data pkg, and that the http server has no problem
@@ -32,12 +36,34 @@ func main() {
 	// Holds current irc message
 	var msg string
 
+	fmt.Println(time.Now())
 	fmt.Println("Server starting...")
 	go irc.Connect("irc.freenode.net:6665", c)
+	go cli()
 	for {
 		select {
 		case msg = <-c:
 			data.Handle(msg)
+		}
+	}
+}
+
+// simple cli that allows checking of db stats and runtime
+func cli() {
+	var inp string
+	reader := bufio.NewReader(os.Stdin)
+	for {
+		inp, _ = reader.ReadString('\n')
+		switch inp {
+		case "stats\n":
+			data.Stats()
+		case "dump\n":
+			data.Dump()
+		case "runtime\n":
+			fmt.Println(time.Now().Sub(startTime))
+		case "quit\n", "q\n", "exit\n":
+			fmt.Println(time.Now().Sub(startTime))
+			os.Exit(1)
 		}
 	}
 }

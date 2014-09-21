@@ -22,7 +22,6 @@ func Handle(input string) {
 		fmt.Println("Could not parse message")
 	}
 	store(msg)
-	//viewDB(input)
 }
 
 func store(msg *irc.Message) {
@@ -41,8 +40,7 @@ func store(msg *irc.Message) {
 
 // Print DB to console in human readable format.
 // For debugging purposes only.
-func viewDB(msg string) {
-	fmt.Println("MSG: ", msg)
+func viewDB() {
 	fmt.Println("DB:")
 	fmt.Println("    Nodes:")
 	for k, v := range DB.Nodes {
@@ -55,10 +53,15 @@ func viewDB(msg string) {
 	fmt.Println("--------")
 }
 
+func Stats() {
+	fmt.Printf("Nodes: %d\n", len(DB.Nodes))
+	fmt.Printf("Edges: %d\n", len(DB.Edges))
+}
+
 func Dump() {
 	graphJSON, err := json.Marshal(DB)
 	if err != nil {
 		fmt.Println(err)
 	}
-	fmt.Printf("%s", graphJSON)
+	fmt.Printf("%s\n", graphJSON)
 }

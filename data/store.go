@@ -19,7 +19,6 @@ func joined(msg *irc.Message) {
 
 	// Create new user node if non-existent
 	if DB.Nodes[msg.Prefix.Name] == nil {
-		fmt.Printf("New User: %s\n", msg.Prefix.Name)
 		DB.Nodes[msg.Prefix.Name] = &Node{
 			ID:       msg.Prefix.Name,
 			NodeType: "user",
@@ -51,7 +50,7 @@ func messaged(msg *irc.Message) {
 				Target:   name,
 				EdgeType: "REFERENCED",
 			}
-			fmt.Printf("\n%s referenced %s\n", msg.Prefix.Name, name)
+			fmt.Printf("%s referenced %s\n", msg.Prefix.Name, name)
 		}
 	}
 }
@@ -64,7 +63,6 @@ func inchan(msg *irc.Message) {
 	users := strings.Split(msg.Trailing, " ")
 	for _, u := range users {
 		if DB.Nodes[u] == nil {
-			fmt.Printf("New User: %s\n", u)
 			DB.Nodes[u] = &Node{
 				ID:       u,
 				NodeType: "user",
