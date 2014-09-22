@@ -61,6 +61,8 @@ func cli() {
 			data.Dump()
 		case "runtime\n":
 			fmt.Println(time.Now().Sub(startTime))
+		case "list\n":
+			data.ViewDB()
 		case "quit\n", "q\n", "exit\n":
 			fmt.Println(time.Now().Sub(startTime))
 			os.Exit(1)

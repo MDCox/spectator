@@ -40,15 +40,15 @@ func store(msg *irc.Message) {
 
 // Print DB to console in human readable format.
 // For debugging purposes only.
-func viewDB() {
+func ViewDB() {
 	fmt.Println("DB:")
-	fmt.Println("    Nodes:")
-	for k, v := range DB.Nodes {
-		fmt.Printf("        %s, %v\n", k, v)
+	fmt.Println("\n  Nodes:\n")
+	for _, v := range DB.Nodes {
+		fmt.Printf("%s, ", v.ID)
 	}
-	fmt.Println("    Edges:")
-	for k, v := range DB.Edges {
-		fmt.Printf("        %s, %v\n", k, v)
+	fmt.Println("\n  Edges:\n")
+	for _, v := range DB.Edges {
+		fmt.Printf("%s, ", fmt.Sprintf("(%s-%s)", v.Source, v.Target))
 	}
 	fmt.Println("--------")
 }
