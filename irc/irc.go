@@ -51,12 +51,12 @@ func identify(conn *irc.Conn) {
 	var messages []*irc.Message
 	messages = append(messages, &irc.Message{
 		Command:  irc.USER,
-		Params:   []string{"spectator", "0", "*"},
-		Trailing: "spectator",
+		Params:   []string{"testin", "0", "*"},
+		Trailing: "testin",
 	})
 	messages = append(messages, &irc.Message{
 		Command: irc.NICK,
-		Params:  []string{"spectator"},
+		Params:  []string{"testin"},
 	})
 	for _, msg := range messages {
 		err := conn.Encode(msg)

@@ -8,38 +8,29 @@ import (
 	"github.com/sorcix/irc"
 )
 
-// Main datastore
-var DB *neoism.Database
-
 // Map with usernames as key and their associated rooms as the values
-var users map[string][]string
+var users map[string][]string = make(map[string][]string)
 
-func init() {
-	DB, err := neoism.Connect("http://127.0.0.1:7474/db/data")
-	if err != nil {
-		fmt.Println("Could not find Neo4j instance")
-		fmt.Println(DB, err)
-	}
-}
+var rooms []string = []string{"#angularjs", "#emberjs", "#knockoutjs"}
 
-func Handle(input string) {
+func Handle(input string, DB *neoism.Database) {
 	msg := irc.ParseMessage(input)
 	if msg == nil {
 		fmt.Println("Could not parse message")
 	}
-	store(msg)
+	store(msg, DB)
 }
 
-func store(msg *irc.Message) {
+func store(msg *irc.Message, DB *neoism.Database) {
 	switch msg.Command {
 	case "JOIN":
-		joined(msg)
+		joined(msg, DB)
 	case "PRIVMSG":
-		messaged(msg)
+		messaged(msg, DB)
 	case "ACTION":
-		messaged(msg)
+		messaged(msg, DB)
 	// List of nicks in Channel before start.
 	case "353":
-		inchan(msg)
+		inchan(msg, DB)
 	}
 }

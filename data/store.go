@@ -8,32 +8,37 @@ import (
 )
 
 // Create user node and "IS_IN" edge to room if non-existent.
-func joined(msg *irc.Message) {
+func joined(msg *irc.Message, DB *neoism.Database) {
 	room := msg.Params[0]
 	user := cleanName(msg.Prefix.Name)
 
-	contains := false
 	if users[user] == nil {
 		users[user] = []string{room}
-	} else {
-		for _, r := range users[user] {
-			if r == room {
-				contains = true
-				break
-			}
-		}
+	}
 
+	contains := false
+	for _, r := range users[user] {
+		if r == room {
+			contains = true
+			break
+		}
 	}
 
 	if contains != true {
 		users[user] = append(users[user], room)
 
+		statement := fmt.Sprintf(
+			`MERGE (n:Room {name: "%v"}) MERGE (n)<-[:IS_IN]-(u:User {name: "%v"})`,
+			room, user)
+
 		// Create new room node if non-existent
 		query := neoism.CypherQuery{
-			Statement:  "MERGE (n:Room {name: {room}})<-[:IS_IN]-(u:User {name: {user}})",
-			Parameters: neoism.Props{"room": room, "user": user},
+			Statement: statement,
 		}
-		DB.Cypher(&query)
+		err := DB.Cypher(&query)
+		if err != nil {
+			fmt.Println(err)
+		}
 	}
 }
 
@@ -41,19 +46,25 @@ func joined(msg *irc.Message) {
 // If it is, create a "REFERENCED" edge between speaker and
 // the reference.  If that edge already exists, increment
 // the "times" property by 1.
-func messaged(msg *irc.Message) {
+func messaged(msg *irc.Message, DB *neoism.Database) {
 	message := msg.Trailing
 	for name, _ := range users {
 		if strings.Contains(message, name) {
 			speaker := cleanName(msg.Prefix.Name)
 			reference := name
 
+			fmt.Printf("%v was referenced by %v", speaker, reference)
+
+			statement := fmt.Sprintf(`MERGE (s:User {name: "%v"})-[r:REFERENCED]->(u:User {name: "%v"})
+					         ON MATCH SET r.times = coalesce(r.times, 0) + 1`, speaker, reference)
+
 			query := neoism.CypherQuery{
-				Statement: `MERGE (s:User {name: {speaker}})-[r:REFERENCED]-(u:User {name: {reference}})
-					    ON MATCH r.times = coalesce(r.times, 0) + 1`,
-				Parameters: neoism.Props{"speaker": speaker, "reference": reference},
+				Statement: statement,
 			}
-			DB.Cypher(&query)
+			err := DB.Cypher(&query)
+			if err != nil {
+				fmt.Println(err)
+			}
 		}
 	}
 }
@@ -62,14 +73,19 @@ func messaged(msg *irc.Message) {
 // spectator was started.  If they were added from another
 // room, they are not added.  An edge is drawn to show that
 // they are in the room.
-func inchan(msg *irc.Message) {
+func inchan(msg *irc.Message, DB *neoism.Database) {
 	nicks := strings.Split(msg.Trailing, " ")
 	room := msg.Params[2]
-	rawQuery := []string{"MERGE"}
+
+	queryStart := fmt.Sprintf(`MERGE (n:Room {name: "%v"}) `, room)
+	rawQuery := []string{queryStart}
 
 	for _, u := range nicks {
+		if strings.Contains(u, "\\") || strings.Contains(u, "Simone") {
+			continue
+		}
 		if users[u] == nil {
-			pattern := fmt.Sprintf(`(:User {name: "%v"})-[:IS_IN]->(:Room {name: "%v"}),`, u, room)
+			pattern := fmt.Sprintf(`MERGE (:User {name: "%v"})-[:IS_IN]->(n)`, u)
 			rawQuery = append(rawQuery, pattern)
 		}
 	}
@@ -77,5 +93,8 @@ func inchan(msg *irc.Message) {
 	query := neoism.CypherQuery{
 		Statement: strings.Join(rawQuery, " "),
 	}
-	DB.Cypher(&query)
+	err := DB.Cypher(&query)
+	if err != nil {
+		fmt.Println(err)
+	}
 }

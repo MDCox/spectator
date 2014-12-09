@@ -27,5 +27,10 @@ func cleanName(nick string) string {
 	cleaned = strings.Replace(nick, "[GONE]", "", 1)
 	cleaned = strings.Replace(nick, "GONE", "", 1)
 
+	// other
+	cleaned = strings.Replace(nick, "/", "", 1)
+	cleaned = strings.Replace(nick, "_", "", 1)
+	cleaned = strings.Replace(nick, "\\", "", 1)
+	cleaned = strings.Replace(nick, "\"", "", 1)
 	return cleaned
 }

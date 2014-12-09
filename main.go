@@ -7,6 +7,7 @@ import (
 	"./irc"
 	"bufio"
 	"fmt"
+	"github.com/jmcvetta/neoism"
 	"os"
 	"time"
 )
@@ -25,12 +26,19 @@ func main() {
 
 	fmt.Println(time.Now())
 	fmt.Println("Server starting...")
+
+	DB, err := neoism.Connect("http://127.0.0.1:7474/db/data")
+	if err != nil {
+		fmt.Println("Could not find Neo4j instance")
+		fmt.Println(DB, err)
+	}
+
 	go irc.Connect("irc.freenode.net:6665", c)
 	go cli()
 	for {
 		select {
 		case msg = <-c:
-			data.Handle(msg)
+			data.Handle(msg, DB)
 		}
 	}
 }
