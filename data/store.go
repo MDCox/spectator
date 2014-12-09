@@ -28,7 +28,9 @@ func joined(msg *irc.Message, DB *neoism.Database) {
 		users[user] = append(users[user], room)
 
 		statement := fmt.Sprintf(
-			`MERGE (n:Room {name: "%v"}) MERGE (n)<-[:IS_IN]-(u:User {name: "%v"})`,
+			`MERGE (n:Room {name: "%v"})
+			 MERGE (u:User {name: "%v"})
+			 MERGE (n)<-[:IS_IN]-(u)`,
 			room, user)
 
 		// Create new room node if non-existent
@@ -55,8 +57,10 @@ func messaged(msg *irc.Message, DB *neoism.Database) {
 
 			fmt.Printf("%v was referenced by %v", speaker, reference)
 
-			statement := fmt.Sprintf(`MERGE (s:User {name: "%v"})-[r:REFERENCED]->(u:User {name: "%v"})
-					         ON MATCH SET r.times = coalesce(r.times, 0) + 1`, speaker, reference)
+			statement := fmt.Sprintf(
+				`MATCH (s:User {name: "%v"}), (u:User {name: "%v"})
+				 MERGE (s)-[r:REFERENCED]->(u)
+				 ON MATCH SET r.times = coalesce(r.times, 0) + 1`, speaker, reference)
 
 			query := neoism.CypherQuery{
 				Statement: statement,
@@ -80,13 +84,13 @@ func inchan(msg *irc.Message, DB *neoism.Database) {
 	queryStart := fmt.Sprintf(`MERGE (n:Room {name: "%v"}) `, room)
 	rawQuery := []string{queryStart}
 
+	i := 0
 	for _, u := range nicks {
-		if strings.Contains(u, "\\") || strings.Contains(u, "Simone") {
-			continue
-		}
+		cu := cleanName(u)
 		if users[u] == nil {
-			pattern := fmt.Sprintf(`MERGE (:User {name: "%v"})-[:IS_IN]->(n)`, u)
+			pattern := fmt.Sprintf(`MERGE (u%v:User {name: "%v"}) MERGE (u%v)-[:IS_IN]->(n)`, i, cu, i)
 			rawQuery = append(rawQuery, pattern)
+			i++
 		}
 	}
 

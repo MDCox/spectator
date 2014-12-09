@@ -10,27 +10,14 @@ import "strings"
 func cleanName(nick string) string {
 	var cleaned string
 
-	// IRC op codes
-	cleaned = strings.Replace(nick, "+", "", 1)
-	cleaned = strings.Replace(nick, "@", "", 1)
-	cleaned = strings.Replace(nick, "~", "", 1)
-	cleaned = strings.Replace(nick, "&", "", 1)
+	// Make alphanumeric only
+	cleaned = alphanum.ReplaceAllString(nick, "")
 
 	// Possible "away" tokens
-	cleaned = strings.Replace(nick, "_away", "", 1)
-	cleaned = strings.Replace(nick, "_AWAY", "", 1)
-	cleaned = strings.Replace(nick, "away", "", 1)
-	cleaned = strings.Replace(nick, "AWAY", "", 1)
-	cleaned = strings.Replace(nick, "[AWAY]", "", 1)
-	cleaned = strings.Replace(nick, "|away", "", 1)
-	cleaned = strings.Replace(nick, "|AWAY", "", 1)
-	cleaned = strings.Replace(nick, "[GONE]", "", 1)
-	cleaned = strings.Replace(nick, "GONE", "", 1)
+	cleaned = strings.Replace(cleaned, "away", "", 1)
+	cleaned = strings.Replace(cleaned, "AWAY", "", 1)
+	cleaned = strings.Replace(cleaned, "gone", "", 1)
+	cleaned = strings.Replace(cleaned, "GONE", "", 1)
 
-	// other
-	cleaned = strings.Replace(nick, "/", "", 1)
-	cleaned = strings.Replace(nick, "_", "", 1)
-	cleaned = strings.Replace(nick, "\\", "", 1)
-	cleaned = strings.Replace(nick, "\"", "", 1)
 	return cleaned
 }

@@ -6,12 +6,18 @@ import (
 	"fmt"
 	"github.com/jmcvetta/neoism"
 	"github.com/sorcix/irc"
+	"regexp"
 )
 
 // Map with usernames as key and their associated rooms as the values
 var users map[string][]string = make(map[string][]string)
 
-var rooms []string = []string{"#angularjs", "#emberjs", "#knockoutjs"}
+// Regex used for name cleaning
+var alphanum *regexp.Regexp
+
+func init() {
+	alphanum, _ = regexp.Compile("[^a-zA-Z0-9]")
+}
 
 func Handle(input string, DB *neoism.Database) {
 	msg := irc.ParseMessage(input)
