@@ -5,14 +5,10 @@ package main
 import (
 	"./data"
 	"./irc"
-	"bufio"
 	"fmt"
 	"github.com/jmcvetta/neoism"
-	"os"
 	"time"
 )
-
-var startTime time.Time = time.Now()
 
 // Handles all the different packages to make sure that the data-collecting bot
 // can pass its output to the data pkg, and that the http server has no problem
@@ -34,27 +30,10 @@ func main() {
 	}
 
 	go irc.Connect("irc.freenode.net:6665", c)
-	go cli()
 	for {
 		select {
 		case msg = <-c:
 			data.Handle(msg, DB)
-		}
-	}
-}
-
-// simple cli that allows checking of db stats and runtime
-func cli() {
-	var inp string
-	reader := bufio.NewReader(os.Stdin)
-	for {
-		inp, _ = reader.ReadString('\n')
-		switch inp {
-		case "runtime\n":
-			fmt.Println(time.Now().Sub(startTime))
-		case "quit\n", "q\n", "exit\n":
-			fmt.Println(time.Now().Sub(startTime))
-			os.Exit(1)
 		}
 	}
 }
