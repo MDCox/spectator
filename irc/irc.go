@@ -14,10 +14,10 @@ import (
 // in the rooms variable.
 func Connect(hostname string, c chan string) {
 	rooms := []string{
-		"#angularjs", "#emberjs",
-		"#knockoutjs",
-		//More javascript channels, for when more traffic is needed (testing)
-		"#javascript", "#Node.js", "#jquery", "#d3.js", "##javascript", "#sailsjs", "#reactjs",
+		"#Node.js", "##javascript",
+		"#python", "#haskell", "#vim", "#go-nuts", "#ruby",
+		"#clojure", "#perl", "##php",
+		"#erlang", "#scheme", "#lisp", "#R", "#swift-lang",
 	}
 
 	fmt.Printf("connecting to %s\n", hostname)

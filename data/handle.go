@@ -30,11 +30,11 @@ func Handle(input string, DB *neoism.Database) {
 func store(msg *irc.Message, DB *neoism.Database) {
 	switch msg.Command {
 	case "JOIN":
-		joined(msg, DB)
+		go joined(msg, DB)
 	case "PRIVMSG":
-		messaged(msg, DB)
+		go messaged(msg, DB)
 	case "ACTION":
-		messaged(msg, DB)
+		go messaged(msg, DB)
 	// List of nicks in Channel before start.
 	case "353":
 		inchan(msg, DB)

@@ -55,10 +55,11 @@ func messaged(msg *irc.Message, DB *neoism.Database) {
 			speaker := cleanName(msg.Prefix.Name)
 			reference := name
 
-			fmt.Printf("%v was referenced by %v", speaker, reference)
+			fmt.Printf("%v was referenced by %v\n", speaker, reference)
 
 			statement := fmt.Sprintf(
-				`MATCH (s:User {name: "%v"}), (u:User {name: "%v"})
+				`MERGE (s:User {name: "%v"})
+				 MERGE (u:User {name: "%v"})
 				 MERGE (s)-[r:REFERENCED]->(u)
 				 ON MATCH SET r.times = coalesce(r.times, 0) + 1`, speaker, reference)
 
@@ -84,13 +85,11 @@ func inchan(msg *irc.Message, DB *neoism.Database) {
 	queryStart := fmt.Sprintf(`MERGE (n:Room {name: "%v"}) `, room)
 	rawQuery := []string{queryStart}
 
-	i := 0
-	for _, u := range nicks {
+	for i, u := range nicks {
 		cu := cleanName(u)
 		if users[u] == nil {
 			pattern := fmt.Sprintf(`MERGE (u%v:User {name: "%v"}) MERGE (u%v)-[:IS_IN]->(n)`, i, cu, i)
 			rawQuery = append(rawQuery, pattern)
-			i++
 		}
 	}
 
